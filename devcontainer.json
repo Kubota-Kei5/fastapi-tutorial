@@ -1,0 +1,8 @@
+{
+    "name": "fastapi-tutorial",
+    "build": {
+      "dockerfile": "Dockerfile"
+    },
+  
+    "remoteUser": "k395599"
+  }
