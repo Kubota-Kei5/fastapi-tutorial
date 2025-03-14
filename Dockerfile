@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.10-bullseye
 
 # Add non-root user
 ARG USERNAME=k395599
