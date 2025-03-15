@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- ナビゲーション -->
+
+    <main>
+        <h1>ユーザー詳細</h1>
+        <div class="search-form">
+            <input type="text" id="userId" placeholder="ユーザーIDを入力">
+            <button onclick="getUser()">検索</button>
+        </div>
+        <div id="userDetails"></div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadUserFromUrl);
+    </script>
+</body>
+
+</html>

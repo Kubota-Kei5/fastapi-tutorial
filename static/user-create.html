@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- ナビゲーション -->
+
+    <main>
+        <h1>ユーザー登録</h1>
+        <div class="create-form">
+            <input type="text" id="newUserId" placeholder="ユーザーID">
+            <input type="text" id="firstName" placeholder="名">
+            <input type="text" id="lastName" placeholder="姓">
+            <input type="number" id="birthYear" placeholder="生年">
+            <button onclick="createUser()">登録</button>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
