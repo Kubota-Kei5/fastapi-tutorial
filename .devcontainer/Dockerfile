@@ -15,4 +15,5 @@ RUN echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME
 RUN chmod 0440 /etc/sudoers.d/$USERNAME
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+RUN pip install --upgrade firebase-admin
 
