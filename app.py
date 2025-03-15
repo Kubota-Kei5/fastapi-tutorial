@@ -10,7 +10,7 @@ app = FastAPI()
 # CORSミドルウェアを追加
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 本番環境では適切なオリジンを指定してください
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -65,3 +65,15 @@ def createUser(data: Dict):
         "message": f"User '{doc_name}' created successfully.",
         "data": doc_value
     }
+
+@app.delete("/{user_id}")
+def delete_user(user_id: str):
+    doc_ref = db.collection("users").document(user_id)
+    doc_ref.delete()
+    return {"message": f"User '{user_id}' deleted successfully."}
+
+@app.put("/{user_id}")
+def update_user(user_id: str, data: Dict):
+    doc_ref = db.collection("users").document(user_id)
+    doc_ref.update(data)
+    return {"message": f"User '{user_id}' updated successfully."}
