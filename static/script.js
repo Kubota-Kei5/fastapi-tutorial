@@ -198,4 +198,82 @@ function provideFallbackNavigation() {
 }
 
 // DOMContentLoadedイベントでナビゲーションを読み込む
-document.addEventListener('DOMContentLoaded', loadNavigation); 
+document.addEventListener('DOMContentLoaded', loadNavigation);
+
+// 編集ページへの遷移関数
+function redirectToUpdate() {
+    const userId = document.getElementById('userId').value;
+    window.location.href = `user-update.html?id=${userId}`;
+}
+
+// 編集ページ用のデータ読み込み関数
+async function loadUserDataForUpdate() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const userId = urlParams.get('id');
+    
+    if (!userId) {
+        alert('ユーザーIDが指定されていません。');
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/${userId}`);
+        const data = await response.json();
+        
+        if (data.error) {
+            alert('ユーザーが見つかりません');
+            return;
+        }
+
+        document.getElementById('updateUserId').value = userId;
+        document.getElementById('updateFirstName').value = data.first;
+        document.getElementById('updateLastName').value = data.last;
+        document.getElementById('updateBirthYear').value = data.born;
+    } catch (error) {
+        console.error('Error:', error);
+        alert('データの取得に失敗しました');
+    }
+}
+
+// ユーザー情報更新関数
+async function updateUser() {
+    if (!confirm('このユーザー情報を更新しますか？')) {
+        return;
+    }
+
+    const userId = document.getElementById('updateUserId').value;
+    const firstName = document.getElementById('updateFirstName').value;
+    const lastName = document.getElementById('updateLastName').value;
+    const birthYear = document.getElementById('updateBirthYear').value;
+
+    if (!userId || !firstName || !lastName || !birthYear) {
+        alert('すべての項目を入力してください');
+        return;
+    }
+
+    const userData = {
+        first: firstName,
+        last: lastName,
+        born: parseInt(birthYear)
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData)
+        });
+
+        if (response.ok) {
+            alert('ユーザー情報が更新されました');
+            window.location.href = `user-detail.html?id=${userId}`;
+        } else {
+            alert('更新に失敗しました');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('エラーが発生しました');
+    }
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main>
+        <h1>ユーザー情報の編集</h1>
+        <div class="update-form">
+            <div class="form-group">
+                <label for="updateUserId">ユーザーID</label>
+                <input type="text" id="updateUserId" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="updateFirstName">名</label>
+                <input type="text" id="updateFirstName" placeholder="First Name">
+            </div>
+
+            <div class="form-group">
+                <label for="updateLastName">姓</label>
+                <input type="text" id="updateLastName" placeholder="Last Name">
+            </div>
+
+            <div class="form-group">
+                <label for="updateBirthYear">生年</label>
+                <input type="number" id="updateBirthYear" placeholder="Born">
+            </div>
+
+            <button onclick="updateUser()" class="update-btn">
+                <i class="fas fa-save"></i> 更新
+            </button>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNavigation();
+            loadUserDataForUpdate();
+        });
+    </script>
+</body>
+
+</html>
