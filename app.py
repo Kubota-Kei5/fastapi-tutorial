@@ -1,27 +1,53 @@
-from typing import Union
-
 from fastapi import FastAPI
 from pydantic import BaseModel
-
+from firestore import db
+from typing import Dict
 app = FastAPI()
 
 
-class Item(BaseModel):
-    name: str
-    price: float
-    is_offer: Union[bool, None] = None
+# class Item(BaseModel):
+#     name: str
+#     price: float
+#     is_offer: Union[bool, None] = None
 
+users_ref = db.collection("users")
+docs = users_ref.stream()
 
+# すべてのユーザーを取得
 @app.get("/")
-def read_root():
-    return {"Hello": "World"}
+def get_users():
+    users_ref = db.collection("users")
+    docs = users_ref.stream()
+    results = {}
+    for doc in docs:
+        results[doc.id] = doc.to_dict()
+    return results
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+# 特定のユーザーを取得
+@app.get("/{user_id}")
+def get_user(user_id: str):
+    doc_ref = db.collection("users").document(user_id)
+    doc = doc_ref.get()
+    if doc.exists:
+        return doc.to_dict()
+    else:
+        return {"error": "User not found"}
 
+# ユーザーを追加
+@app.post("/")
+def createUser(data: Dict):
+    if not data:
+        return {"error": "No data provided"}
+    
+    # 最初のキー(=ドキュメントID)と値(=ドキュメント内容)を取得
+    doc_name = list(data.keys())[0]     # 例: "alovelace"
+    doc_value = data[doc_name]          # 例: {"born":1815, "first":"Ada", "last":"Lovelace"}
 
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+    doc_ref = db.collection("users").document(doc_name)
+    doc_ref.set(doc_value)
+
+    return {
+        "message": f"User '{doc_name}' created successfully.",
+        "data": doc_value
+    }
