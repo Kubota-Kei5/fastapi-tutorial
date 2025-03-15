@@ -41,14 +41,24 @@ async function getUser(specificUserId = null) {
         const response = await fetch(`${API_BASE_URL}/${userId}`);
         const data = await response.json();
         const userDetails = document.getElementById('userDetails');
+
+        if (data.error) {
+            userDetails.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h2>ユーザーが見つかりません</h2>
+                </div>
+            `;
+            return;
+        }
         
         let tableHTML = `
             <table border="1" style="width: 100%; border-collapse: collapse;">
                 <tr>
                     <th style="padding: 8px;">ユーザーID</th>
-                    <th style="padding: 8px;">名</th>
-                    <th style="padding: 8px;">姓</th>
-                    <th style="padding: 8px;">生年</th>
+                    <th style="padding: 8px;">First Name</th>
+                    <th style="padding: 8px;">Last Name</th>
+                    <th style="padding: 8px;">Born</th>
                 </tr>
                 <tr>
                     <td style="padding: 8px;">${userId}</td>
@@ -61,6 +71,13 @@ async function getUser(specificUserId = null) {
         
         userDetails.innerHTML = tableHTML;
     } catch (error) {
+        const userDetails = document.getElementById('userDetails');
+        userDetails.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <h2>ユーザーが見つかりません</h2>
+            </div>
+        `;
         console.error('Error:', error);
     }
 }

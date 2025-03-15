@@ -16,6 +16,9 @@
         <div class="search-form">
             <input type="text" id="userId" placeholder="ユーザーIDを入力">
             <button onclick="getUser()">検索</button>
+            <button onclick="deleteUser()" class="delete-btn" style="float: right; background-color: #ff4444;">
+                <i class="fas fa-trash"></i> 削除
+            </button>
         </div>
         <div id="userDetails"></div>
     </main>
@@ -23,6 +26,39 @@
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', loadUserFromUrl);
+
+        async function deleteUser() {
+            const userId = document.getElementById('userId').value;
+            if (!userId) {
+                const urlParams = new URLSearchParams(window.location.search);
+                userId = urlParams.get('id');
+            }
+
+            if (!userId) {
+                alert('ユーザーIDが指定されていません。');
+                return;
+            }
+
+            if (!confirm('本当にこのユーザーを削除しますか？')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:8000/${userId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    alert('ユーザーが正常に削除されました。');
+                    window.location.href = '/static/user-list.html';
+                } else {
+                    alert('削除中にエラーが発生しました。');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('削除中にエラーが発生しました。');
+            }
+        }
     </script>
 </body>
 
