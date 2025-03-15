@@ -1,8 +1,22 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from firestore import db
 from typing import Dict
+
 app = FastAPI()
+
+# CORSミドルウェアを追加
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 本番環境では適切なオリジンを指定してください
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 # class Item(BaseModel):
