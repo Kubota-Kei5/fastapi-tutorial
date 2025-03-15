@@ -41,6 +41,7 @@ async function getUser(specificUserId = null) {
         const response = await fetch(`${API_BASE_URL}/${userId}`);
         const data = await response.json();
         const userDetails = document.getElementById('userDetails');
+        const deleteButtonContainer = document.getElementById('deleteButtonContainer');
 
         if (data.error) {
             userDetails.innerHTML = `
@@ -49,6 +50,7 @@ async function getUser(specificUserId = null) {
                     <h2>ユーザーが見つかりません</h2>
                 </div>
             `;
+            deleteButtonContainer.style.display = 'none';
             return;
         }
         
@@ -70,14 +72,17 @@ async function getUser(specificUserId = null) {
         `;
         
         userDetails.innerHTML = tableHTML;
+        deleteButtonContainer.style.display = 'block';
     } catch (error) {
         const userDetails = document.getElementById('userDetails');
+        const deleteButtonContainer = document.getElementById('deleteButtonContainer');
         userDetails.innerHTML = `
             <div class="error-message">
                 <i class="fas fa-exclamation-circle"></i>
                 <h2>ユーザーが見つかりません</h2>
             </div>
         `;
+        deleteButtonContainer.style.display = 'none';
         console.error('Error:', error);
     }
 }

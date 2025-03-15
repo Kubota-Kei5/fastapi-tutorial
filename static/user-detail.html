@@ -16,11 +16,13 @@
         <div class="search-form">
             <input type="text" id="userId" placeholder="Enter UserID">
             <button onclick="getUser()">検索</button>
-            <button onclick="deleteUser()" class="delete-btn" style="float: right; background-color: #ff4444;">
+        </div>
+        <div id="userDetails"></div>
+        <div id="deleteButtonContainer" style="display: none; margin-top: 20px; text-align: right;">
+            <button onclick="deleteUser()" class="delete-btn" style="background-color: #ff4444;">
                 <i class="fas fa-trash"></i> 削除
             </button>
         </div>
-        <div id="userDetails"></div>
     </main>
 
     <script src="script.js"></script>
