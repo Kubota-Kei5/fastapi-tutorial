@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from firestore import db
+from pydantic import BaseModel, Field
 from typing import Dict
+from firestore import db
 
 app = FastAPI()
 
@@ -19,13 +19,10 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
-# class Item(BaseModel):
-#     name: str
-#     price: float
-#     is_offer: Union[bool, None] = None
-
-users_ref = db.collection("users")
-docs = users_ref.stream()
+class UserData(BaseModel):
+    first: str = Field(..., max_length=50, description="First name of the user")
+    last: str = Field(..., max_length=50, description="Last name of the user")
+    born: int = Field(..., ge=1000, le=3000, description="Birth year")
 
 # すべてのユーザーを取得
 @app.get("/")
@@ -50,7 +47,7 @@ def get_user(user_id: str):
 
 # ユーザーを追加
 @app.post("/")
-def createUser(data: Dict):
+def create_user(data: Dict[str, UserData]):
     if not data:
         return {"error": "No data provided"}
     
@@ -73,7 +70,7 @@ def delete_user(user_id: str):
     return {"message": f"User '{user_id}' deleted successfully."}
 
 @app.put("/{user_id}")
-def update_user(user_id: str, data: Dict):
+def update_user(user_id: str, user: UserData):
     doc_ref = db.collection("users").document(user_id)
-    doc_ref.update(data)
+    doc_ref.update(user.model_dump()) # Fieldで必須項目に指定しているためmodel_dump()の引数は不要
     return {"message": f"User '{user_id}' updated successfully."}
