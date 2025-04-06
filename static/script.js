@@ -1,15 +1,16 @@
-const API_BASE_URL = 'http://localhost:8000';
+// const API_BASE_URL = "http://localhost:8000";
+const API_BASE_URL = "http://34.146.178.16";
 
 async function getAllUsers() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/`);
-        const data = await response.json();
-        const userList = document.getElementById('userList');
+  try {
+    const response = await fetch(`${API_BASE_URL}/`);
+    const data = await response.json();
+    const userList = document.getElementById("userList");
 
-        let listHTML = '<div class="user-grid">';
+    let listHTML = '<div class="user-grid">';
 
-        for (const [userId, user] of Object.entries(data)) {
-            listHTML += `
+    for (const [userId, user] of Object.entries(data)) {
+      listHTML += `
                 <div class="user-card">
                     <div class="user-info">
                         <i class="fas fa-user user-icon"></i>
@@ -21,40 +22,42 @@ async function getAllUsers() {
                     </button>
                 </div>
             `;
-        }
-
-        listHTML += '</div>';
-        userList.innerHTML = listHTML;
-    } catch (error) {
-        console.error('Error:', error);
     }
+
+    listHTML += "</div>";
+    userList.innerHTML = listHTML;
+  } catch (error) {
+    console.error("Error:", error);
+  }
 }
 
 async function getUser(specificUserId = null) {
-    const userId = specificUserId || document.getElementById('userId').value;
-    if (!userId) {
-        alert('ユーザーIDを入力してください');
-        return;
-    }
+  const userId = specificUserId || document.getElementById("userId").value;
+  if (!userId) {
+    alert("ユーザーIDを入力してください");
+    return;
+  }
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/${userId}`);
-        const data = await response.json();
-        const userDetails = document.getElementById('userDetails');
-        const deleteButtonContainer = document.getElementById('deleteButtonContainer');
+  try {
+    const response = await fetch(`${API_BASE_URL}/${userId}`);
+    const data = await response.json();
+    const userDetails = document.getElementById("userDetails");
+    const deleteButtonContainer = document.getElementById(
+      "deleteButtonContainer"
+    );
 
-        if (data.error) {
-            userDetails.innerHTML = `
+    if (data.error) {
+      userDetails.innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-circle"></i>
                     <h2>ユーザーが見つかりません</h2>
                 </div>
             `;
-            deleteButtonContainer.style.display = 'none';
-            return;
-        }
-        
-        let tableHTML = `
+      deleteButtonContainer.style.display = "none";
+      return;
+    }
+
+    let tableHTML = `
             <table border="1" style="width: 100%; border-collapse: collapse;">
                 <tr>
                     <th style="padding: 8px;">ユーザーID</th>
@@ -70,115 +73,118 @@ async function getUser(specificUserId = null) {
                 </tr>
             </table>
         `;
-        
-        userDetails.innerHTML = tableHTML;
-        deleteButtonContainer.style.display = 'block';
-    } catch (error) {
-        const userDetails = document.getElementById('userDetails');
-        const deleteButtonContainer = document.getElementById('deleteButtonContainer');
-        userDetails.innerHTML = `
+
+    userDetails.innerHTML = tableHTML;
+    deleteButtonContainer.style.display = "block";
+  } catch (error) {
+    const userDetails = document.getElementById("userDetails");
+    const deleteButtonContainer = document.getElementById(
+      "deleteButtonContainer"
+    );
+    userDetails.innerHTML = `
             <div class="error-message">
                 <i class="fas fa-exclamation-circle"></i>
                 <h2>ユーザーが見つかりません</h2>
             </div>
         `;
-        deleteButtonContainer.style.display = 'none';
-        console.error('Error:', error);
-    }
+    deleteButtonContainer.style.display = "none";
+    console.error("Error:", error);
+  }
 }
 
 async function createUser() {
-    const userId = document.getElementById('newUserId').value;
-    const firstName = document.getElementById('firstName').value;
-    const lastName = document.getElementById('lastName').value;
-    const birthYear = document.getElementById('birthYear').value;
+  const userId = document.getElementById("newUserId").value;
+  const firstName = document.getElementById("firstName").value;
+  const lastName = document.getElementById("lastName").value;
+  const birthYear = document.getElementById("birthYear").value;
 
-    if (!userId || !firstName || !lastName || !birthYear) {
-        alert('すべての項目を入力してください');
-        return;
-    }
+  if (!userId || !firstName || !lastName || !birthYear) {
+    alert("すべての項目を入力してください");
+    return;
+  }
 
-    const userData = {
-        [userId]: {
-            first: firstName,
-            last: lastName,
-            born: parseInt(birthYear)
-        }
-    };
+  const userData = {
+    [userId]: {
+      first: firstName,
+      last: lastName,
+      born: parseInt(birthYear),
+    },
+  };
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData)
-        });
-        const data = await response.json();
-        alert('ユーザーが作成されました');
-        getAllUsers();
-    } catch (error) {
-        console.error('Error:', error);
-        alert('エラーが発生しました');
-    }
+  try {
+    const response = await fetch(`${API_BASE_URL}/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+    const data = await response.json();
+    alert("ユーザーが作成されました");
+    getAllUsers();
+  } catch (error) {
+    console.error("Error:", error);
+    alert("エラーが発生しました");
+  }
 }
 
 // 詳細ページへの遷移関数を追加
 function redirectToDetail(userId) {
-    window.location.href = `user-detail.html?id=${userId}`;
+  window.location.href = `user-detail.html?id=${userId}`;
 }
 
 // URLパラメータからユーザーIDを取得して詳細を表示する関数
 function loadUserFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('id');
-    if (userId) {
-        // 検索フォームにユーザーIDを設定
-        const userIdInput = document.getElementById('userId');
-        if (userIdInput) {
-            userIdInput.value = userId;
-        }
-        getUser(userId);
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get("id");
+  if (userId) {
+    // 検索フォームにユーザーIDを設定
+    const userIdInput = document.getElementById("userId");
+    if (userIdInput) {
+      userIdInput.value = userId;
     }
+    getUser(userId);
+  }
 }
 
 // ナビゲーション読み込み用の関数
 async function loadNavigation() {
-    try {
-        const response = await fetch('nav.html');
-        if (!response.ok) throw new Error('Navigation load failed');
-        
-        const html = await response.text();
-        
-        // bodyの最初の要素としてナビゲーションを挿入
-        document.body.insertAdjacentHTML('afterbegin', html);
-        
-        // 現在のページのナビゲーションアイテムをアクティブに設定
-        setActiveNavItem();
-    } catch (error) {
-        console.error('Navigation loading error:', error);
-        // エラー時のフォールバックナビゲーション
-        provideFallbackNavigation();
-    }
+  try {
+    const response = await fetch("nav.html");
+    if (!response.ok) throw new Error("Navigation load failed");
+
+    const html = await response.text();
+
+    // bodyの最初の要素としてナビゲーションを挿入
+    document.body.insertAdjacentHTML("afterbegin", html);
+
+    // 現在のページのナビゲーションアイテムをアクティブに設定
+    setActiveNavItem();
+  } catch (error) {
+    console.error("Navigation loading error:", error);
+    // エラー時のフォールバックナビゲーション
+    provideFallbackNavigation();
+  }
 }
 
 // 現在のページに基づいてナビゲーションアイテムをアクティブに設定
 function setActiveNavItem() {
-    // 現在のページのファイル名を取得（.htmlを除去）
-    const currentPage = window.location.pathname.split('/').pop().replace('.html', '') || 'index';
-    
-    // 対応するナビゲーションアイテムを探してアクティブクラスを追加
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => {
-        if (item.dataset.page === currentPage) {
-            item.classList.add('active');
-        }
-    });
+  // 現在のページのファイル名を取得（.htmlを除去）
+  const currentPage =
+    window.location.pathname.split("/").pop().replace(".html", "") || "index";
+
+  // 対応するナビゲーションアイテムを探してアクティブクラスを追加
+  const navItems = document.querySelectorAll(".nav-item");
+  navItems.forEach((item) => {
+    if (item.dataset.page === currentPage) {
+      item.classList.add("active");
+    }
+  });
 }
 
 // フォールバックナビゲーション（エラー時に表示）
 function provideFallbackNavigation() {
-    const fallbackNav = `
+  const fallbackNav = `
         <nav class="global-nav">
             <div class="nav-container">
                 <a href="index.html" class="logo">
@@ -194,86 +200,89 @@ function provideFallbackNavigation() {
             </div>
         </nav>
     `;
-    document.body.insertAdjacentHTML('afterbegin', fallbackNav);
+  document.body.insertAdjacentHTML("afterbegin", fallbackNav);
 }
 
 // DOMContentLoadedイベントでナビゲーションを読み込む
-document.addEventListener('DOMContentLoaded', loadNavigation);
+document.addEventListener("DOMContentLoaded", () => {
+  loadNavigation();
+  getAllUsers();
+});
 
 // 編集ページへの遷移関数
 function redirectToUpdate() {
-    const userId = document.getElementById('userId').value;
-    window.location.href = `user-update.html?id=${userId}`;
+  const userId = document.getElementById("userId").value;
+  window.location.href = `user-update.html?id=${userId}`;
 }
 
 // 編集ページ用のデータ読み込み関数
 async function loadUserDataForUpdate() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const userId = urlParams.get('id');
-    
-    if (!userId) {
-        alert('ユーザーIDが指定されていません。');
-        return;
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get("id");
+
+  if (!userId) {
+    alert("ユーザーIDが指定されていません。");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/${userId}`);
+    const data = await response.json();
+
+    if (data.error) {
+      alert("ユーザーが見つかりません");
+      return;
     }
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/${userId}`);
-        const data = await response.json();
-        
-        if (data.error) {
-            alert('ユーザーが見つかりません');
-            return;
-        }
-
-        document.getElementById('updateUserId').value = userId;
-        document.getElementById('updateFirstName').value = data.first;
-        document.getElementById('updateLastName').value = data.last;
-        document.getElementById('updateBirthYear').value = data.born;
-    } catch (error) {
-        console.error('Error:', error);
-        alert('データの取得に失敗しました');
-    }
+    document.getElementById("updateUserId").value = userId;
+    document.getElementById("updateFirstName").value = data.first;
+    document.getElementById("updateLastName").value = data.last;
+    document.getElementById("updateBirthYear").value = data.born;
+  } catch (error) {
+    console.error("Error:", error);
+    alert("データの取得に失敗しました");
+  }
 }
 
 // ユーザー情報更新関数
 async function updateUser() {
-    if (!confirm('このユーザー情報を更新しますか？')) {
-        return;
+  if (!confirm("このユーザー情報を更新しますか？")) {
+    return;
+  }
+
+  const userId = document.getElementById("updateUserId").value;
+  const firstName = document.getElementById("updateFirstName").value;
+  const lastName = document.getElementById("updateLastName").value;
+  const birthYear = document.getElementById("updateBirthYear").value;
+
+  if (!userId || !firstName || !lastName || !birthYear) {
+    alert("すべての項目を入力してください");
+    return;
+  }
+
+  const userData = {
+    first: firstName,
+    last: lastName,
+    born: parseInt(birthYear),
+  };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(userData),
+    });
+
+    if (response.ok) {
+      alert("ユーザー情報が更新されました");
+      window.location.href = `user-detail.html?id=${userId}`;
+    } else {
+      alert("更新に失敗しました");
     }
-
-    const userId = document.getElementById('updateUserId').value;
-    const firstName = document.getElementById('updateFirstName').value;
-    const lastName = document.getElementById('updateLastName').value;
-    const birthYear = document.getElementById('updateBirthYear').value;
-
-    if (!userId || !firstName || !lastName || !birthYear) {
-        alert('すべての項目を入力してください');
-        return;
-    }
-
-    const userData = {
-        first: firstName,
-        last: lastName,
-        born: parseInt(birthYear)
-    };
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/${userId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(userData)
-        });
-
-        if (response.ok) {
-            alert('ユーザー情報が更新されました');
-            window.location.href = `user-detail.html?id=${userId}`;
-        } else {
-            alert('更新に失敗しました');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('エラーが発生しました');
-    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("エラーが発生しました");
+  }
 }

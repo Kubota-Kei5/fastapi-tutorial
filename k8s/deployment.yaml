@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-tutorial
+  labels:
+    app: fastapi-tutorial
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-tutorial
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: fastapi-tutorial
+    spec:
+      containers:
+        - name: fastapi-tutorial
+          image: asia-northeast1-docker.pkg.dev/k8s-tutorial-454510/my-repo/fastapi-tutorial:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          resources: {}

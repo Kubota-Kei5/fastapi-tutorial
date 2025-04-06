@@ -1,2 +1,4 @@
 /settings/serviceAccountKey.json
 /__pycache__
+/env/.env.local
+/env/.env.production

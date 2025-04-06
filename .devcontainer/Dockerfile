@@ -5,6 +5,8 @@ ARG USERNAME=k395599
 ARG USER_ID=1000
 ARG GROUP_ID=1000
 
+WORKDIR /app
+
 COPY requirements.txt .
 
 RUN groupadd --gid $GROUP_ID $USERNAME
@@ -17,3 +19,10 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN pip install --upgrade firebase-admin
 
+COPY static/ static/
+COPY app.py .
+COPY firestore.py .
+COPY env/ env/
+
+# FastAPI アプリを起動
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
